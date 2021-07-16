@@ -48,6 +48,8 @@ public class Launch {
         final List<String> tweakClassNames = new ArrayList<>(options.valuesOf(tweakClassOption));
 
         final List<String> argumentList = new ArrayList<>();
+        argumentList.add("--version");
+        argumentList.add(profileName);
         // This list of names will be interacted with through tweakers. They can append to this list
         // any 'discovered' tweakers from their preferred mod loading mechanism
         // By making this object discoverable and accessible it's possible to perform
