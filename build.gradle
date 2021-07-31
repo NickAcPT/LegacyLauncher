@@ -9,6 +9,9 @@ repositories {
     maven {
         url "https://libraries.minecraft.net/"
     }
+    maven {
+        url "https://maven.fabricmc.net/"
+    }
 }
 
 group = "net.minecraft"
@@ -20,9 +23,11 @@ dependencies {
     implementation "net.sf.jopt-simple:jopt-simple:4.5"
     implementation "org.ow2.asm:asm:9.2"
     implementation "org.ow2.asm:asm-commons:9.2"
+    implementation "org.ow2.asm:asm-util:9.2"
     implementation "org.lwjgl.lwjgl:lwjgl:2.9.1"
     implementation "org.apache.logging.log4j:log4j-core:2.0-beta9"
     implementation "org.apache.logging.log4j:log4j-api:2.0-beta9"
+    implementation "net.fabricmc:sponge-mixin:0.9.2+mixin.0.8.2"
 }
 
 task sourcesJar(type: Jar) {
