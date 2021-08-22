@@ -24,25 +24,28 @@
  */
 package org.spongepowered.asm.launch;
 
+import io.github.nickacpt.lightcraft.launcher.MinecraftLaunchHelper;
 import java.io.File;
+import java.lang.reflect.Field;
 import java.util.List;
-
-import org.spongepowered.asm.launch.platform.CommandLineOptions;
-
 import net.minecraft.launchwrapper.ITweaker;
 import net.minecraft.launchwrapper.LaunchClassLoader;
+import org.spongepowered.asm.launch.platform.CommandLineOptions;
+import org.spongepowered.asm.service.IMixinService;
+import org.spongepowered.asm.service.MixinService;
+import org.spongepowered.asm.service.MixinServiceAbstract;
 
 /**
  * TweakClass for running mixins in production. Being a tweaker ensures that we
  * get injected into the AppClassLoader but does mean that we will need to
  * inject the FML coremod by hand if running under FML.
  */
-public class LegacyMixinTweaker implements ITweaker {
+public class LightCraftMixinTweaker implements ITweaker {
     
     /**
      * Hello world
      */
-    public LegacyMixinTweaker() {
+    public LightCraftMixinTweaker() {
         MixinBootstrap.start();
     }
     
@@ -62,6 +65,20 @@ public class LegacyMixinTweaker implements ITweaker {
     @Override
     public final void injectIntoClassLoader(LaunchClassLoader classLoader) {
         MixinBootstrap.inject();
+        setMixinSide();
+    }
+
+    private void setMixinSide() {
+        IMixinService service = MixinService.getService();
+        if (service instanceof MixinServiceAbstract) {
+            try {
+                Field sideNameField = service.getClass().getField("sideName");
+                sideNameField.setAccessible(true);
+                sideNameField.set(service, MinecraftLaunchHelper.getMixinSide());
+            } catch (NoSuchFieldException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     /* (non-Javadoc)
@@ -69,7 +86,7 @@ public class LegacyMixinTweaker implements ITweaker {
      */
     @Override
     public String getLaunchTarget() {
-        return "net.minecraft.client.Minecraft";
+        return MinecraftLaunchHelper.getMinecraftMainClass();
     }
 
     /* (non-Javadoc)

@@ -1,5 +1,6 @@
 package net.minecraft.launchwrapper;
 
+import io.github.nickacpt.lightcraft.launcher.MinecraftLaunchHelper;
 import java.io.File;
 import java.util.List;
 
@@ -18,7 +19,7 @@ public class VanillaTweaker implements ITweaker {
 
     @Override
     public String getLaunchTarget() {
-        return "net.minecraft.client.Minecraft";
+        return MinecraftLaunchHelper.getMinecraftMainClass();
     }
 
     @Override

@@ -1,5 +1,7 @@
 package net.minecraft.launchwrapper.injector;
 
+import io.github.nickacpt.lightcraft.launcher.MinecraftLaunchHelper;
+import java.util.Objects;
 import net.minecraft.launchwrapper.IClassTransformer;
 import net.minecraft.launchwrapper.Launch;
 import org.lwjgl.opengl.Display;
@@ -32,7 +34,7 @@ public class VanillaTweakInjector implements IClassTransformer {
         if (bytes == null) {
             return null;
         }
-        if (!"net.minecraft.client.Minecraft".equals(name)) {
+        if (!MinecraftLaunchHelper.getMinecraftMainClass().equals(name)) {
             return bytes;
         }
 
@@ -69,7 +71,7 @@ public class VanillaTweakInjector implements IClassTransformer {
         // Call the method below
         injectedMethod.visitMethodInsn(INVOKESTATIC, "net/minecraft/launchwrapper/injector/VanillaTweakInjector", "inject", "()Ljava/io/File;", false);
         // Store the result in the workDir variable.
-        injectedMethod.visitFieldInsn(PUTSTATIC, "net/minecraft/client/Minecraft", workDirNode.name, "Ljava/io/File;");
+        injectedMethod.visitFieldInsn(PUTSTATIC, "net/minecraft/client/Minecraft", Objects.requireNonNull(workDirNode).name, "Ljava/io/File;");
 
         mainMethod.instructions.insert(injectedMethod.instructions);
 
@@ -95,7 +97,7 @@ public class VanillaTweakInjector implements IClassTransformer {
             // Load icon from disk
             final File smallIcon = new File(Launch.assetsDir, "icons/icon_16x16.png");
             final File bigIcon = new File(Launch.assetsDir, "icons/icon_32x32.png");
-            System.out.println("Loading current icons for window from: " + smallIcon + " and " + bigIcon);
+            System.out.println("Attempting to load current icons for window from: " + smallIcon + " and " + bigIcon);
             Display.setIcon(new ByteBuffer[]{
                 loadIcon(smallIcon),
                 loadIcon(bigIcon)
@@ -114,7 +116,7 @@ public class VanillaTweakInjector implements IClassTransformer {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            // silence error, it's fine if we don't find an icon
         }
     }
 
