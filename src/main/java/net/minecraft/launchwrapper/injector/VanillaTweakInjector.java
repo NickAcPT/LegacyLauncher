@@ -1,19 +1,6 @@
 package net.minecraft.launchwrapper.injector;
 
 import io.github.nickacpt.lightcraft.launcher.MinecraftLaunchHelper;
-import java.util.Objects;
-import net.minecraft.launchwrapper.IClassTransformer;
-import net.minecraft.launchwrapper.Launch;
-import org.lwjgl.opengl.Display;
-import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.Label;
-import org.objectweb.asm.Type;
-import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.FieldNode;
-import org.objectweb.asm.tree.MethodNode;
-
-import javax.imageio.ImageIO;
 import java.awt.Frame;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -22,10 +9,21 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.List;
-
+import java.util.Objects;
+import javax.imageio.ImageIO;
+import net.minecraft.launchwrapper.IClassTransformer;
+import net.minecraft.launchwrapper.Launch;
+import org.lwjgl.opengl.Display;
+import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.Label;
 import static org.objectweb.asm.Opcodes.ACC_STATIC;
 import static org.objectweb.asm.Opcodes.INVOKESTATIC;
 import static org.objectweb.asm.Opcodes.PUTSTATIC;
+import org.objectweb.asm.Type;
+import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.FieldNode;
+import org.objectweb.asm.tree.MethodNode;
 
 public class VanillaTweakInjector implements IClassTransformer {
 
@@ -34,7 +32,7 @@ public class VanillaTweakInjector implements IClassTransformer {
         if (bytes == null) {
             return null;
         }
-        if (!MinecraftLaunchHelper.getMinecraftMainClass().equals(name)) {
+        if (!MinecraftLaunchHelper.getMinecraftGameClass().equals(name)) {
             return bytes;
         }
 
@@ -71,7 +69,7 @@ public class VanillaTweakInjector implements IClassTransformer {
         // Call the method below
         injectedMethod.visitMethodInsn(INVOKESTATIC, "net/minecraft/launchwrapper/injector/VanillaTweakInjector", "inject", "()Ljava/io/File;", false);
         // Store the result in the workDir variable.
-        injectedMethod.visitFieldInsn(PUTSTATIC, "net/minecraft/client/Minecraft", Objects.requireNonNull(workDirNode).name, "Ljava/io/File;");
+        injectedMethod.visitFieldInsn(PUTSTATIC, MinecraftLaunchHelper.getMinecraftGameClass().replace('.', '/'), Objects.requireNonNull(workDirNode).name, "Ljava/io/File;");
 
         mainMethod.instructions.insert(injectedMethod.instructions);
 
@@ -99,8 +97,8 @@ public class VanillaTweakInjector implements IClassTransformer {
             final File bigIcon = new File(Launch.assetsDir, "icons/icon_32x32.png");
             System.out.println("Attempting to load current icons for window from: " + smallIcon + " and " + bigIcon);
             Display.setIcon(new ByteBuffer[]{
-                loadIcon(smallIcon),
-                loadIcon(bigIcon)
+                    loadIcon(smallIcon),
+                    loadIcon(bigIcon)
             });
             Frame[] frames = Frame.getFrames();
 
