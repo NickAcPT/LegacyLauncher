@@ -1,17 +1,20 @@
 package net.minecraft.launchwrapper;
 
+import java.io.File;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
 import net.minecraft.launchwrapper.utils.Classpath;
-import net.minecraft.launchwrapper.utils.java8.Java8ClasspathResolver;
-import net.minecraft.launchwrapper.utils.property.PropertyClasspathResolver;
-import net.minecraft.launchwrapper.utils.unsafe.UnsafeClasspathResolver;
 import org.apache.logging.log4j.Level;
-
-import java.io.File;
-import java.lang.reflect.Method;
-import java.util.*;
 
 public class Launch {
     private static final String DEFAULT_TWEAK = "net.minecraft.launchwrapper.VanillaTweaker";
@@ -48,6 +51,9 @@ public class Launch {
         final List<String> tweakClassNames = new ArrayList<>(options.valuesOf(tweakClassOption));
 
         final List<String> argumentList = new ArrayList<>();
+        argumentList.add("--version");
+        argumentList.add(profileName);
+
         // This list of names will be interacted with through tweakers. They can append to this list
         // any 'discovered' tweakers from their preferred mod loading mechanism
         // By making this object discoverable and accessible it's possible to perform
