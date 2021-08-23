@@ -46,6 +46,7 @@ public class LightCraftMixinTweaker implements ITweaker {
      * Hello world
      */
     public LightCraftMixinTweaker() {
+        setMixinSide();
         MixinBootstrap.start();
     }
     
@@ -65,7 +66,6 @@ public class LightCraftMixinTweaker implements ITweaker {
     @Override
     public final void injectIntoClassLoader(LaunchClassLoader classLoader) {
         MixinBootstrap.inject();
-        setMixinSide();
     }
 
     private void setMixinSide() {
