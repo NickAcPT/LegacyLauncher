@@ -72,7 +72,7 @@ public class LightCraftMixinTweaker implements ITweaker {
         IMixinService service = MixinService.getService();
         if (service instanceof MixinServiceAbstract) {
             try {
-                Field sideNameField = service.getClass().getField("sideName");
+                Field sideNameField = service.getClass().getSuperclass().getDeclaredField("sideName");
                 sideNameField.setAccessible(true);
                 sideNameField.set(service, MinecraftLaunchHelper.getMixinSide());
             } catch (NoSuchFieldException | IllegalAccessException e) {
