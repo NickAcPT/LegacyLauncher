@@ -69,6 +69,7 @@ public class LightCraftMixinTweaker implements ITweaker {
     }
 
     private void setMixinSide() {
+        // Set Environment side to the one specified by MinecraftLaunchHelper#getMixinSide()
         IMixinService service = MixinService.getService();
         if (service instanceof MixinServiceAbstract) {
             try {
